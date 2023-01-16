@@ -24,3 +24,5 @@ done
 echo -e "\n\e[1;34m------------Summary-------------\e[0m"
 echo -e "\e[1;32m\tPassed $passed\e[0m"
 echo -e "\e[1;31m\tFailed $failed\e[0m"
+
+rm comp.txt
