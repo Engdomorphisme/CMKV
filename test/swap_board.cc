@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <experimental/random>
 #include <fstream>
 #include <iostream>
 #include <vector>
@@ -18,13 +19,13 @@ int main(int argc, char *argv[])
     {
         board.push_back(line);
     }
-    size_t n = board.size();
+    int n = board.size();
     srand(time(nullptr));
     auto board_copy = board;
     for (int i = 0; i < n * n - n; ++i)
     {
-        int x = rand() % n;
-        int y = rand() % n;
+        int x = std::experimental::randint(0, n - 1);
+        int y = std::experimental::randint(0, n - 1);
         if (x == y)
             y = (y + 1) % n;
 

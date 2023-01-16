@@ -1,5 +1,6 @@
-#include <iostream>
+#include <experimental/random>
 #include <fstream>
+#include <iostream>
 #include <vector>
 
 int main(int argc, char *argv[])
@@ -19,7 +20,7 @@ int main(int argc, char *argv[])
         std::string line;
         for (int j = 0; j < 4; ++j)
         {
-            line += std::to_string(rand() % 10);
+            line += std::to_string(std::experimental::randint(1, 9));
         }
         if (i % n != 0)
         {
