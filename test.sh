@@ -21,6 +21,8 @@ do
         failed=$((failed+1))
     fi
 done
+
 echo -e "\n\033[1;34m------------Summary-------------\033[0m"
 echo -e "\033[1;32m\tPassed $passed\033[0m"
 echo -e "\033[1;31m\tFailed $failed\033[0m"
+rm comp.txt

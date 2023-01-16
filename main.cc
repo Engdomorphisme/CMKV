@@ -1,4 +1,5 @@
 #include <cmath>
+#include <experimental/random>
 #include <fstream>
 #include <iostream>
 #include <vector>
@@ -196,68 +197,18 @@ Board solve(Board &board)
     int maxIterations = 1000000;
     srand(time(nullptr));
 
-    while (score > 0 && iterations < maxIterations)
+    while (score > 0)
     {
-        int a = rand() % 10;
-        // Switch two rows
-        if (a == 0)
+        int i = std::experimental::randint(0, size - 1);
+        int j = std::experimental::randint(0, size - 1);
+        if (i == j)
         {
-            int i = rand() % n;
-            int j = rand() % n;
-            if (i == j)
-            {
-                j = (j + 1) % n;
-            }
-            board = swapRows(board, i, j);
-        }
-        // Switch two columns
-        else if (a == 1)
-        {
-            int i = rand() % n;
-            int j = rand() % n;
-            if (i == j)
-            {
-                j = (j + 1) % n;
-            }
-            board = swapColumns(board, i, j);
-        }
-        // Rotate the rows
-        else if (a == 2)
-        {
-            auto row = getRow(board, 0);
-            for (int i = 0; i < n - 1; ++i)
-            {
-                board = swapRows(board, i, i + 1);
-            }
-            for (int i = 0; i < n; ++i)
-            {
-                board[(n - 1) * n + i] = row[i];
-            }
-        }
-        // Rotate the columns
-        else if (a == 3)
-        {
-            auto column = getColumn(board, 0);
-            for (int i = 0; i < n - 1; ++i)
-            {
-                board = swapColumns(board, i, i + 1);
-            }
-            for (int i = 0; i < n; ++i)
-            {
-                board[i * n + n - 1] = column[i];
-            }
+            j = (j + 1) % size;
         }
 
-        // Switch two tiles
-        else
-        {
-            int i = rand() % size;
-            int j = rand() % size;
-
-            Tiles temp = board[i];
-            board[i] = board[j];
-            board[j] = temp;
-        }
+        Tiles temp = board[i];
+        board[i] = board[j];
+        board[j] = temp;
 
         // Evaluate the neighbor
         score = evaluate(board);
@@ -287,21 +238,31 @@ Board solve(Board &board)
 
         iterations += 1;
     }
-
     return bestBoard;
 }
 
 int main(int argc, char *argv[])
 {
-    std::ifstream in(argv[1]);
-    std::ofstream out(argv[2]);
-    int n = argv[1][12] - '0';
-    Board board(n * n, std::vector<int>(4, 0));
+    if (argc == 3 or argc == 4)
+    {
+        std::ifstream in(argv[1]);
+        std::ofstream out(argv[2]);
 
-    board = readBoard(in);
-    auto solution = solve(board);
+        auto board = readBoard(in);
+        auto solution = solve(board);
 
-    writeBoard(out, solution);
+        writeBoard(out, solution);
 
-    return 0;
+        // To check the solution
+        if (argc == 4)
+        {
+            printBoard(solution);
+            std::ifstream solutionIn(argv[3]);
+            auto solutionBoard = readBoard(solutionIn);
+            printBoard(solutionBoard);
+        }
+
+        return 0;
+    }
+    return 1;
 }
