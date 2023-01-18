@@ -13,12 +13,12 @@ Board solve(Board &board)
     int bestScore = score;
     Board bestBoard = board;
     int iterations = 0;
-    int maxIterations = 1000000;
+    int maxIterations = 3000000;
     double T0 = 5.0;
     std::mt19937 rng(std::random_device{}());
     std::uniform_real_distribution<double> distribution(0.0, 1.0);
 
-    while (score > 0)
+    while (bestScore != 0 && iterations < maxIterations)
     {
         int i = std::experimental::randint(0, size - 1);
         while (!board[i].isMovable())
