@@ -47,7 +47,7 @@ Board solve(Board &board)
         // Evaluate the neighbor
         score = evaluate(board);
         // If the neighbor is better, accept it
-        if (score < bestScore)
+        if (score <= bestScore)
         {
             bestScore = score;
             bestBoard = board;
