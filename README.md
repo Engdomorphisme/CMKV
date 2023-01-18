@@ -1,5 +1,6 @@
 # CMKV
 
+
 ## Utilisation
 ```make
 ./a.out <input file> <output file>
@@ -16,3 +17,9 @@
 g++ test.cc
 ./prepare_test.sh <taille de la grille> <fichier>
 ```
+
+## Groupe
+- Enguerrand de Gentile Duquesne
+- Youenn Loie
+- Guillaume Larue
+- Nicolas Trabet
