@@ -85,31 +85,22 @@ void writeBoard(std::ofstream &out, Board &board)
 
 int evaluate(Board &board)
 {
+    int size = board.size();
+    int n = std::sqrt(size);
     int score = 0;
-    int n = std::sqrt(board.size());
-
-    // North and south borders
-    for (int i = 0; i < n - 1; ++i)
+    for (int i = 0; i < size; i++)
     {
-        for (int j = 0; j < n; ++j)
+        int row = i / n;
+        int col = i % n;
+        // North and south borders
+        if (row > 0)
         {
-            if (board[i * n + j].getSouth()
-                != board[(i + 1) * n + j].getNorth())
-            {
-                score += 1;
-            }
+            score += (board[i].getNorth() != board[i - n].getSouth());
         }
-    }
-
-    // West and east borders
-    for (int i = 0; i < n; ++i)
-    {
-        for (int j = 0; j < n - 1; ++j)
+        // West and east borders
+        if (col > 0)
         {
-            if (board[i * n + j].getEast() != board[i * n + j + 1].getWest())
-            {
-                score += 1;
-            }
+            score += (board[i].getWest() != board[i - 1].getEast());
         }
     }
     return score;
