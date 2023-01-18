@@ -1,17 +1,7 @@
 #pragma once
 
-#include <random>
+#include <experimental/random>
 
 #include "tetravex.hh"
 
-class Solver
-{
-public:
-    Solver(const Tetravex &tetravex);
-    Solver(const Solver &) = default;
-
-    void solve();
-
-private:
-    const Tetravex &tetravex;
-};
+Board solve(Board &board);

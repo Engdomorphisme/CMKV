@@ -35,7 +35,7 @@ bool Tile::isMovable() const
 
 Tile Tile::parse_from_string(const std::string &str)
 {
-    if (str.length() == 6 && str[5] == '@')
+    if (str.length() == 7 && str[6] == '@')
     {
         return Tile(str[0], str[1], str[2], str[3], true);
     }
@@ -56,5 +56,5 @@ std::vector<Tile> Tile::parse_from_file(const std::string &filename)
 
 std::string Tile::to_string() const
 {
-    return std::string(1, north) + west + east + south + (movable ? " @" : "");
+    return std::string(1, north) + west + east + south;
 }

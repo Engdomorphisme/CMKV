@@ -1,22 +1,35 @@
+#include <cmath>
+#include <experimental/random>
+#include <fstream>
+#include <iostream>
+#include <vector>
+
+#include "solver.hh"
 #include "tetravex.hh"
+#include "tile.hh"
 
-int main(int argc, char **argv)
+int main(int argc, char *argv[])
 {
-    if (argc != 3)
+    if (argc == 3 or argc == 4)
     {
-        std::cerr << "Usage: " << argv[0] << " <input_file> <output_file>"
-                  << std::endl;
-        return 1;
+        std::ifstream in(argv[1]);
+        std::ofstream out(argv[2]);
+
+        auto board = readBoard(in);
+        auto solution = solve(board);
+
+        writeBoard(out, solution);
+
+        // To check the solution
+        if (argc == 4)
+        {
+            printBoard(solution);
+            std::ifstream solutionIn(argv[3]);
+            auto solutionBoard = readBoard(solutionIn);
+            printBoard(solutionBoard);
+        }
+
+        return 0;
     }
-    Tetravex tetravex = Tetravex::parse_from_file(argv[1]);
-    tetravex.print();
-    tetravex.toFile(argv[2]);
-    std::cout << "Score: " << tetravex.evaluate() << std::endl;
-
-    tetravex.swap_tiles(0, 1);
-    tetravex.swap_tiles(0, 2);
-
-    tetravex.print();
-    std::cout << "Score: " << tetravex.evaluate() << std::endl;
-    return 0;
+    return 1;
 }

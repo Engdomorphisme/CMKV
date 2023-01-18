@@ -1,15 +1,36 @@
 #include "tetravex.hh"
 
-Tetravex::Tetravex(const std::vector<Tile> &tiles, size_t size)
-    : board(tiles)
-    , size(size)
-{}
+#include <cmath>
 
-void Tetravex::print() const
+#include "tile.hh"
+
+Board readBoard(std::ifstream &in)
 {
-    int n = size;
+    Board board;
+    std::string line;
+    while (std::getline(in, line))
+    {
+        auto north = line[0];
+        auto west = line[1];
+        auto east = line[2];
+        auto south = line[3];
+        auto movable = true;
+        if (line.length() == 6 && line[5] == '@')
+        {
+            movable = false;
+        }
 
-    // Top separator
+        Tile tile(north, west, east, south, movable);
+        board.push_back(tile);
+    }
+    return board;
+}
+
+void printBoard(Board &board)
+{
+    int n = std::sqrt(board.size());
+
+    // Top separator[1]
     std::cout << "+";
     for (int i = 0; i < n; ++i)
     {
@@ -54,56 +75,42 @@ void Tetravex::print() const
     }
 }
 
-void Tetravex::toFile(const std::string &filename) const
+void writeBoard(std::ofstream &out, Board &board)
 {
-    std::ofstream file(filename);
-    for (auto &tile : board)
+    for (int i = 0; i < board.size(); ++i)
     {
-        file << tile.to_string() << std::endl;
+        out << board[i].to_string() << std::endl;
     }
 }
 
-Tetravex Tetravex::parse_from_file(const std::string &filename)
-{
-    std::vector<Tile> tiles;
-    std::ifstream file(filename);
-    std::string line;
-    while (std::getline(file, line))
-    {
-        tiles.push_back(Tile::parse_from_string(line));
-    }
-    return Tetravex(tiles, std::sqrt(tiles.size()));
-}
-
-const size_t Tetravex::getSize() const
-{
-    return size;
-}
-
-int Tetravex::evaluate() const
+int evaluate(Board &board)
 {
     int score = 0;
-    for (int i = 0; i < size; ++i)
+    int n = std::sqrt(board.size());
+
+    // North and south borders
+    for (int i = 0; i < n - 1; ++i)
     {
-        for (int j = 0; j < size; ++j)
+        for (int j = 0; j < n; ++j)
         {
-            if (i < size - 1)
+            if (board[i * n + j].getSouth()
+                != board[(i + 1) * n + j].getNorth())
             {
-                score += board[i * size + j].getSouth()
-                    != board[(i + 1) * size + j].getNorth();
+                score += 1;
             }
-            if (j < size - 1)
+        }
+    }
+
+    // West and east borders
+    for (int i = 0; i < n; ++i)
+    {
+        for (int j = 0; j < n - 1; ++j)
+        {
+            if (board[i * n + j].getEast() != board[i * n + j + 1].getWest())
             {
-                score += board[i * size + j].getEast()
-                    != board[i * size + j + 1].getWest();
+                score += 1;
             }
         }
     }
     return score;
-}
-
-void Tetravex::swap_tiles(int i, int j)
-{
-    auto begin = board.begin();
-    std::iter_swap(begin + i, begin + j);
 }
