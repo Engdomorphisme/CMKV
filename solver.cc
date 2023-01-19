@@ -17,15 +17,16 @@ Board solve(Board &board)
     double T0 = 5.0;
     std::mt19937 rng(std::random_device{}());
     std::uniform_real_distribution<double> distribution(0.0, 1.0);
+    std::uniform_int_distribution<int> randint(0, size - 1);
 
     while (bestScore != 0 && iterations < maxIterations)
     {
-        int i = std::experimental::randint(0, size - 1);
+        int i = randint(rng);
         while (!board[i].isMovable())
         {
             i = (i + 1) % size;
         }
-        int j = std::experimental::randint(0, size - 1);
+        int j = randint(rng);
         while (!board[j].isMovable() || i == j)
         {
             j = (j + 1) % size;
@@ -55,7 +56,8 @@ Board solve(Board &board)
                 bestScore = score;
                 bestBoard = board;
             }
-            else // Reject the neighbor
+            // Reject the neighbor and restore the board
+            else
             {
                 board = bestBoard;
             }
