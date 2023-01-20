@@ -20,13 +20,16 @@ int main(int argc, char *argv[])
         board.push_back(line);
     }
     int n = board.size();
-    srand(time(nullptr));
+
+    int azer = std::experimental::randint(0, n - 1);
     auto board_copy = board;
     for (int i = 0; i < n * n - n; ++i)
     {
         int x = std::experimental::randint(0, n - 1);
+        while (x == azer)
+            x = (x + 1) % n;
         int y = std::experimental::randint(0, n - 1);
-        if (x == y)
+        while (x == y || y == azer)
             y = (y + 1) % n;
 
         auto begin = board_copy.begin();

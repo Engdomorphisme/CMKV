@@ -30,7 +30,7 @@ void printBoard(Board &board)
 {
     int n = std::sqrt(board.size());
 
-    // Top separator[1]
+    // Top separator
     std::cout << "+";
     for (int i = 0; i < n; ++i)
     {

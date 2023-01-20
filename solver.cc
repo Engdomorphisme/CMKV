@@ -13,13 +13,13 @@ Board solve(Board &board)
     int bestScore = score;
     Board bestBoard = board;
     int iterations = 0;
-    int maxIterations = 3000000;
-    double T0 = 5.0;
+    double T0 = n + 1;
+
     std::mt19937 rng(std::random_device{}());
     std::uniform_real_distribution<double> distribution(0.0, 1.0);
     std::uniform_int_distribution<int> randint(0, size - 1);
 
-    while (bestScore != 0 && iterations < maxIterations)
+    while (bestScore != 0)
     {
         int i = randint(rng);
         while (!board[i].isMovable())
@@ -31,10 +31,8 @@ Board solve(Board &board)
         {
             j = (j + 1) % size;
         }
-
-        Tile temp = board[i];
-        board[i] = board[j];
-        board[j] = temp;
+        auto begin = board.begin();
+        std::swap(*(begin + i), *(begin + j));
 
         // Evaluate the neighbor
         score = evaluate(board);
@@ -51,6 +49,7 @@ Board solve(Board &board)
             double T = T0 / log(iterations + 2);
             double delta = score - bestScore;
             double p = exp(-delta / T);
+
             if (distribution(rng) < p)
             {
                 bestScore = score;
